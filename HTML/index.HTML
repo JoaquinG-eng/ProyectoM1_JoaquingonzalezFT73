@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es ">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paleta de colores</title>
+    <link rel="stylesheet" href="../CSS/style.css">
+</head>
+<body>
+    <main class="app">
+        <h1>Paleta de colores</h1>
+        <p class="descripcion">Seleccionacolores con nombre y código para tu proyecto.</p>
+
+        <section class="paleta" id="paleta">
+            <article class="color-card" style="--color:#3498db;">
+                <div class="muestra"></div>
+                <div class="datos">
+                    <h2>Azul cielo</h2>
+                    <p>#3498db</p>
+                </div>
+            </article>
+            <article class="color-card" style="--color:#2ecc71;">
+                <div class="muestra"></div>
+                <div class="datos">
+                    <h2>Verde menta</h2>
+                    <p>#2ecc71</p>
+                </div>
+            </article>
+            <article class="color-card" style="--color:#f1c40f;">
+                <div class="muestra"></div>
+                <div class="datos">
+                    <h2>Amarillo sol</h2>
+                    <p>#f1c40f</p>
+                </div>
+            </article>
+            <article class="color-card" style="--color:#e74c3c;">
+                <div class="muestra"></div>
+                <div class="datos">
+                    <h2>Rojo coral</h2>
+                    <p>#e74c3c</p>
+                </div>
+            </article>
+            <article class="color-card" style="--color:#9b59b6;">
+                <div class="muestra"></div>
+                <div class="datos">
+                    <h2>Morado fresco</h2>
+                    <p>#9b59b6</p>
+                </div>
+            </article>
+        </section>
+
+        <div class="actions">
+            
+            <button id="generarBtn">Generar nueva paleta</button>
+            <button id="copiarBtn">Copiar códigos</button>
+        </div>
+
+        <p id="mensaje" class="mensaje" aria-live="polite"></p>
+    </main>
+
+    <script>
+        const colores = [
+            {nombre: 'Azul cielo', codigo:'#3498db'},
+            {nombre: 'Verde menta', codigo:'#2ecc71'},
+            {nombre: 'Amarillo sol', codigo:'#f1c40f'},
+            {nombre: 'Rojo coral', codigo:'#e74c3c'},
+            {nombre: 'Morado fresco', codigo:'#9b59b6'},
+            {nombre: 'Gris piedra', codigo:'#95a5a6'},
+            {nombre: 'Naranja vivo', codigo:'#e67e22'},
+            {nombre: 'Turquesa', codigo:'#1abc9c'},
+            {nombre: 'Cian oscuro', codigo:'#16a085'},
+            {nombre: 'Púrpura', codigo:'#8e44ad'}
+        ];
+
+        const paleta = document.getElementById('paleta');
+        const generarBtn = document.getElementById('generarBtn');
+        const copiarBtn = document.getElementById('copiarBtn');
+        const mensaje = document.getElementById('mensaje');
+
+        function mezclar(array) {
+            return array
+                .map(a => ({ sort: Math.random(), value: a }))
+                .sort((a,b) => a.sort - b.sort)
+                .map(a => a.value);
+        }
+
+        function crearPaletaAleatoria() {
+            const mezcla = mezclar(colores).slice(0, 5);
+            paleta.innerHTML = '';
+            mezcla.forEach(c => {
+                const card = document.createElement('article');
+                card.className = 'color-card';
+                card.style.setProperty('--color', c.codigo);
+                card.innerHTML = `
+                    <div class="muestra"></div>
+                    <div class="datos">
+                        <h2>${c.nombre}</h2>
+                        <p>${c.codigo}</p>
+                    </div>
+                `;
+                paleta.appendChild(card);
+            });
+            mensaje.textContent = 'Paleta aleatoria lista.';
+        }
+
+        function copiarCodigos() {
+            const codigos = Array.from(document.querySelectorAll('.color-card .datos p')).map(el => el.textContent).join(', ');
+            navigator.clipboard.writeText(codigos)
+                .then(() => mensaje.textContent = 'Códigos copiados al portapapeles.')
+                .catch(() => mensaje.textContent = 'No se pudo copiar, usa Ctrl+C.');
+        }
+
+        generarBtn.addEventListener('click', crearPaletaAleatoria);
+        copiarBtn.addEventListener('click', copiarCodigos);
+    </script>
+</body>
+</html>
